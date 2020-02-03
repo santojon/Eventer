@@ -1,0 +1,71 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Kotlin
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+    //  ReactiveX libraries
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.15'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
+
+    //Specific bindings for Android UX  - RxBindings source: https://github.com/JakeWharton/RxBinding
+//    implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:2.2.0'
+
+    // Tests
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    bintrayRepo = 'Eventer'
+    bintrayName = 'Eventer'
+    publishedGroupId = 'com.santojon'
+    libraryName = 'eventer'
+    artifact = 'eventer'
+    libraryDescription = 'Complex Event Processing Framework for Kotlin'
+    siteUrl = 'https://github.com/santojon/Eventer'
+    gitUrl = 'https://github.com/santojon/Eventer.git'
+    releaseDate = new Date()
+    libraryVersion = '1.0'
+    developerId = 'santojon'
+    developerName = 'Jonathan Gomes dos Santos'
+    developerEmail = 'santojon5@gmail.com'
+    licenseName = 'MIT'
+    licenseUrl = 'https://raw.githubusercontent.com/santojon/Eventer/master/LICENSE'
+    allLicenses = ["MIT"]
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+apply from: '../scripts/install.gradle'
+apply from: '../scripts/bintray.gradle'
