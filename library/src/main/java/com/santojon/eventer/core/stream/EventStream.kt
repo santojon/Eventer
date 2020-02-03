@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 class EventStream<T : Any?>(val observable: Observable<T?>?) {
 
     fun subscribe(onNext: ((T?) -> Unit)?) {
-        observable.subscribe(onNext)
+        observable?.subscribe(onNext)
     }
 
     inline fun <reified R : Any?> isAs(): EventStream<R?>? {
@@ -25,7 +25,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      * EventStream that satisfies a predicate function.
      */
     fun filter(predicate: ((T?) -> Boolean)?): EventStream<T?>? {
-        return EventStream(observable.filter(predicate))
+        return EventStream(observable?.filter(predicate))
     }
 
     /**
@@ -33,7 +33,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      * a new EventStream through a projection function.
      */
     fun <R : Any?> map(transform: ((T?) -> R?)?): EventStream<R?>? {
-        return EventStream(observable.map(transform))
+        return EventStream(observable?.map(transform))
     }
 
     /**
@@ -48,7 +48,8 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
         skip: Int? = count
     ): EventStream<List<T?>?>? {
         val sequenceEquals = observable
-            ?.buffer(count!!, skip!!).filter {
+            ?.buffer(count!!, skip!!)
+            ?.filter {
                 var filter = true
                 if (count > 1) {
                     for (i in 1 until (it.size - 1)) {
@@ -70,8 +71,8 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      */
     fun <R : Any?> merge(stream: EventStream<R?>?): ComplexEvent? {
         val merged = Observable.merge(
-            observable.map { element -> Pair(element, (1 as Int?)) },
-            stream?.observable.map { element -> Pair(element, (2 as Int?)) }
+            observable?.map { element -> Pair(element, (1 as Int?)) },
+            stream?.observable?.map { element -> Pair(element, (2 as Int?)) }
         )
         return ComplexEvent(
             observable = merged,
@@ -80,11 +81,11 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
     }
 
     fun buffer(timespan: Long?, timeUnit: TimeUnit?): EventStream<List<T?>?>? {
-        return EventStream(observable.buffer(timespan!!, timeUnit))
+        return EventStream(observable?.buffer(timespan!!, timeUnit))
     }
 
     fun buffer(count: Int?, skip: Int?): EventStream<List<T?>?>? {
-        return EventStream(observable.buffer(count!!, skip!!))
+        return EventStream(observable?.buffer(count!!, skip!!))
     }
 
     /**
@@ -96,7 +97,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
             observable?.buffer(
                 timespan!!,
                 timeUnit
-            ).flatMap { Observable.fromIterable(it) })
+            )?.flatMap { Observable.fromIterable(it) })
     }
 
     /**
@@ -107,7 +108,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
         val merged = Observable.merge(
             observable,
             stream?.observable
-        ).distinct()
+        )?.distinct()
         return EventStream(merged)
     }
 
@@ -143,7 +144,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      * </p>
      */
     fun distinct(): EventStream<T?>? {
-        return EventStream(observable.distinct())
+        return EventStream(observable?.distinct())
     }
 
     /**
@@ -180,7 +181,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
     fun <R : Comparable<R>> orderBy(comparison: ((T?) -> R?)): EventStream<List<T?>?>? {
         val ordered = accumulator()?.map {
             it?.sortedBy(comparison)
-        }.observable
+        }?.observable
         return EventStream(ordered)
     }
 
@@ -194,16 +195,17 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
     fun <R> groupBy(comparison: ((T?) -> R?)): EventStream<Map<R?, List<T?>>>? {
         val grouped = accumulator()?.map {
             it?.groupBy(comparison)
-        }.observable
+        }?.observable
         return EventStream(grouped)
     }
 
     fun <R : Any?> distinct(transform: ((T?) -> R?)?): EventStream<R?>? {
-        return EventStream(observable.map(transform))
+        return EventStream(observable?.map(transform))
     }
 
     fun accumulator(): EventStream<MutableList<T?>?>? {
-        val accumulator = observable.scan(mutableListOf<T?>(),
+        val accumulator = observable?.scan(
+            mutableListOf<T?>(),
             { accumulated, item ->
                 accumulated.add(item)
                 accumulated
