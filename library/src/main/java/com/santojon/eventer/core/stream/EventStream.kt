@@ -6,8 +6,18 @@ import java.util.concurrent.TimeUnit
 
 class EventStream<T : Any?>(val observable: Observable<T?>?) {
 
+    /**
+     * Subscribe to get stream
+     */
     fun subscribe(onNext: ((T?) -> Unit)?) {
         observable?.subscribe(onNext)
+    }
+
+    /**
+     * Subscribe to get stream
+     */
+    fun onReceive(onNext: ((T?) -> Unit)?) {
+        subscribe(onNext)
     }
 
     inline fun <reified R : Any?> isAs(): EventStream<R?>? {
