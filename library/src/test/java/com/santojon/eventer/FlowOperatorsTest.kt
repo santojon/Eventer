@@ -17,6 +17,11 @@ class FlowOperatorsTest {
      */
 
     /**
+     * Simulator instance
+     */
+    private val simulator = EventStreamSimulator<IntEvent>()
+
+    /**
      * Class that represents Int event
      */
     private class IntEvent(val value: Int) : Event, Comparable<IntEvent> {
@@ -52,6 +57,8 @@ class FlowOperatorsTest {
      */
     @Test
     fun distinctEvents() {
+        simulator.clear()
+
         val events = listOf(
             IntEvent(10),
             IntEvent(10),
@@ -66,9 +73,7 @@ class FlowOperatorsTest {
             IntEvent(12)
         )
 
-        val simulator = EventStreamSimulator<IntEvent>()
         val output = simulator.simulate(events, ::distinctFunction)
-
         assert(expected == output)
     }
 //
@@ -77,6 +82,8 @@ class FlowOperatorsTest {
 //     */
 //    @Test
 //    fun exceptEvents() {
+//        simulator.clear()
+//
 //        val events1 = listOf(
 //            IntEvent(10),
 //            IntEvent(10),
@@ -96,17 +103,17 @@ class FlowOperatorsTest {
 //            IntEvent(5)
 //        )
 //
-//        val simulator = EventStreamSimulator<IntEvent>()
 //        val output = simulator.simulate(events1, events2, ::exceptFunction)
-//
 //        assert(expected == output)
 //    }
-//
-//    /**
-//     * Verify two sources to give Events existent in both with no duplicates
-//     */
+
+    /**
+     * Verify two sources to give Events existent in both with no duplicates
+     */
 //    @Test
 //    fun intersectEvents() {
+//        simulator.clear()
+//
 //        val events1 = listOf(
 //            IntEvent(10),
 //            IntEvent(10),
@@ -127,9 +134,7 @@ class FlowOperatorsTest {
 //            IntEvent(12)
 //        )
 //
-//        val simulator = EventStreamSimulator<IntEvent>()
 //        val output = simulator.simulate(events1, events2, ::intersectFunction)
-//
 //        assert(expected == output)
 //    }
 
@@ -138,6 +143,8 @@ class FlowOperatorsTest {
      */
     @Test
     fun orderEvents() {
+        simulator.clear()
+
         val events = listOf(
             IntEvent(10),
             IntEvent(11),
@@ -154,9 +161,7 @@ class FlowOperatorsTest {
             IntEvent(12)
         )
 
-        val simulator = EventStreamSimulator<IntEvent>()
         val output = simulator.simulateCompare(events, ::orderByFunction)
-
         assert(expected == output)
     }
 
@@ -165,6 +170,8 @@ class FlowOperatorsTest {
      */
     @Test
     fun groupEvents() {
+        simulator.clear()
+
         val events = listOf(
             IntEvent(10),
             IntEvent(10),
@@ -193,9 +200,7 @@ class FlowOperatorsTest {
             )
         )
 
-        val simulator = EventStreamSimulator<IntEvent>()
         val output = simulator.simulate(events, ::groupByFunction)
-
         assert(expected == output)
     }
 
@@ -222,15 +227,15 @@ class FlowOperatorsTest {
 //    ): EventStream<IntEvent> {
 //        return stream1.not(stream2)
 //    }
-//
-//    /**
-//     * Executes Intersect operator
-//     */
+
+    /**
+     * Executes Intersect operator
+     */
 //    private fun intersectFunction(
-//        stream1: EventStream<IntEvent>,
-//        stream2: EventStream<IntEvent>
-//    ): EventStream<IntEvent> {
-//        return stream1.intersect(stream2)
+//        stream1: EventStream<IntEvent?>?,
+//        stream2: EventStream<IntEvent?>?
+//    ): EventStream<IntEvent?>? {
+//        return stream1?.intersect(stream2)
 //    }
 
     /**

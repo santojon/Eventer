@@ -1,25 +1,25 @@
 package com.santojon.eventer.test
 
-import com.santojon.eventer.core.event.Event
 import com.santojon.eventer.core.manager.EventManager
 import com.santojon.eventer.core.stream.EventStream
 
 /**
  * Used to simulate Events subscription
  */
-class EventStreamSimulator<T : Event?> {
+class EventStreamSimulator<T : Any?> {
     private var primaryEventManager = EventManager<T?>()
     private var secondaryEventManager = EventManager<T?>()
 
     /**
-     * Simulate Events list throughout EventStream passing a CEP operator function that needs NO PARAMETERS
+     * Simulate Events list throughout [EventStream] passing
+     * a CEP operator function that needs NO PARAMETERS
      */
     fun simulate(
         events: List<T?>?,
         function: ((stream: EventStream<T?>?) -> EventStream<T?>?)
     ): List<T?>? {
         //create the result variable
-        val result = ArrayList<T>()
+        val result = arrayListOf<T?>()
 
         // Apply given Function to stream, and subscribe to result
         function(primaryEventManager.asStream())?.subscribe {
@@ -32,7 +32,8 @@ class EventStreamSimulator<T : Event?> {
     }
 
     /**
-     * Simulate Events list throughout EventStream passing a CEP operator function that needs an EventStream as parameter
+     * Simulate Events list throughout [EventStream] passing
+     * a CEP operator function that needs an [EventStream] as parameter
      */
     fun simulate(
         events1: List<T?>?,
@@ -40,7 +41,7 @@ class EventStreamSimulator<T : Event?> {
         function: ((stream1: EventStream<T?>?, stream2: EventStream<T?>?) -> EventStream<T?>?)
     ): List<T?>? {
         //create the result variable
-        val result = ArrayList<T?>()
+        val result = arrayListOf<T?>()
 
         // Apply given Function to stream, and subscribe to result
         function(primaryEventManager.asStream(), secondaryEventManager.asStream())?.subscribe {
@@ -56,7 +57,8 @@ class EventStreamSimulator<T : Event?> {
     }
 
     /**
-     * Simulate Events list throughout EventStream passing a CEP operator function that needs a Comparator
+     * Simulate Events list throughout [EventStream] passing
+     * a CEP operator function that needs a [Comparator]
      */
     fun simulateCompare(
         events: List<T?>,
@@ -76,7 +78,8 @@ class EventStreamSimulator<T : Event?> {
     }
 
     /**
-     * Simulate Events list throughout EventStream passing a CEP operator function that needs a Grouping function
+     * Simulate Events list throughout [EventStream] passing
+     * a CEP operator function that needs a Grouping function
      */
     fun <R : Any?> simulate(
         events: List<T?>?,
@@ -96,11 +99,19 @@ class EventStreamSimulator<T : Event?> {
     }
 
     /**
-     * Add Events to EventManager
+     * Add Events to [EventManager]
      */
     private fun eventsFromEntries(entries: List<T?>?, manager: EventManager<T?>?) {
         entries?.forEach {
             manager?.addEvent(it)
         }
+    }
+
+    /**
+     * Clear [EventManager]s
+     */
+    fun clear() {
+        primaryEventManager.clear()
+        secondaryEventManager.clear()
     }
 }
