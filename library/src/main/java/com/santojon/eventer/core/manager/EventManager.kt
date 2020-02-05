@@ -3,15 +3,15 @@ package com.santojon.eventer.core.manager
 import com.santojon.eventer.core.stream.EventStream
 import io.reactivex.subjects.PublishSubject
 
-class EventManager<T : Any?> {
+class EventManager<T : Any> {
     // Events subject
-    private var evs: PublishSubject<T?>? = PublishSubject.create()
+    private var evs: PublishSubject<T>? = PublishSubject.create()
 
     // Return stream of events
-    val events: EventStream<T?>? = asStream()
+    val events: EventStream<T>? = asStream()
 
     // Return stream of events
-    val stream: EventStream<T?>? = asStream()
+    val stream: EventStream<T>? = asStream()
 
     /**
      * Add event to Subject
@@ -37,7 +37,7 @@ class EventManager<T : Any?> {
     /**
      * Return stream of events
      */
-    fun asStream(): EventStream<T?>? {
+    fun asStream(): EventStream<T>? {
         return EventStream(evs)
     }
 

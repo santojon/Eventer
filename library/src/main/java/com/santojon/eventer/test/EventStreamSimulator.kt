@@ -6,9 +6,9 @@ import com.santojon.eventer.core.stream.EventStream
 /**
  * Used to simulate Events subscription
  */
-class EventStreamSimulator<T : Any?> {
-    private var primaryEventManager = EventManager<T?>()
-    private var secondaryEventManager = EventManager<T?>()
+class EventStreamSimulator<T : Any> {
+    private var primaryEventManager = EventManager<T>()
+    private var secondaryEventManager = EventManager<T>()
 
     /**
      * Simulate Events list throughout [EventStream] passing
@@ -16,7 +16,7 @@ class EventStreamSimulator<T : Any?> {
      */
     fun simulate(
         events: List<T?>?,
-        function: ((stream: EventStream<T?>?) -> EventStream<T?>?)
+        function: ((stream: EventStream<T>?) -> EventStream<T>?)
     ): List<T?>? {
         //create the result variable
         val result = arrayListOf<T?>()
@@ -38,7 +38,7 @@ class EventStreamSimulator<T : Any?> {
     fun simulate(
         events1: List<T?>?,
         events2: List<T?>?,
-        function: ((stream1: EventStream<T?>?, stream2: EventStream<T?>?) -> EventStream<T?>?)
+        function: ((stream1: EventStream<T>?, stream2: EventStream<T>?) -> EventStream<T>?)
     ): List<T?>? {
         //create the result variable
         val result = arrayListOf<T?>()
@@ -62,7 +62,7 @@ class EventStreamSimulator<T : Any?> {
      */
     fun simulateCompare(
         events: List<T?>,
-        function: ((stream: EventStream<T?>?) -> EventStream<List<T?>?>?)
+        function: ((stream: EventStream<T>?) -> EventStream<List<T>>?)
     ): List<T?>? {
         //create the result variable
         var result = listOf<T?>()
@@ -83,7 +83,7 @@ class EventStreamSimulator<T : Any?> {
      */
     fun <R : Any?> simulate(
         events: List<T?>?,
-        function: ((stream: EventStream<T?>?) -> EventStream<Map<R?, List<T?>>>?)
+        function: ((stream: EventStream<T>?) -> EventStream<Map<R?, List<T>>>?)
     ): Map<R?, List<T?>>? {
         //create the result variable
         var result = mapOf<R?, List<T?>>()
@@ -101,7 +101,7 @@ class EventStreamSimulator<T : Any?> {
     /**
      * Add Events to [EventManager]
      */
-    private fun eventsFromEntries(entries: List<T?>?, manager: EventManager<T?>?) {
+    private fun eventsFromEntries(entries: List<T?>?, manager: EventManager<T>?) {
         entries?.forEach {
             manager?.addEvent(it)
         }

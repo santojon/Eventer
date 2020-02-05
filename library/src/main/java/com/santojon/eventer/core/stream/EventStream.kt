@@ -2,9 +2,10 @@ package com.santojon.eventer.core.stream
 
 import com.santojon.eventer.core.event.ComplexEvent
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.withLatestFrom
 import java.util.concurrent.TimeUnit
 
-class EventStream<T : Any?>(val observable: Observable<T?>?) {
+class EventStream<T : Any>(val observable: Observable<T>?) {
 
     /**
      * Subscribe to get stream
@@ -23,7 +24,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
     /**
      * Filter and Map Events by Class
      */
-    inline fun <reified R : Any?> isAs(): EventStream<R?>? {
+    inline fun <reified R : Any> isAs(): EventStream<R>? {
         return EventStream(
             filter {
                 it is R?
@@ -37,7 +38,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      * Filter emits only events from an
      * EventStream that satisfies a predicate function.
      */
-    fun filter(predicate: ((T?) -> Boolean)?): EventStream<T?>? {
+    fun filter(predicate: ((T?) -> Boolean)?): EventStream<T>? {
         return EventStream(observable?.filter(predicate))
     }
 
@@ -45,7 +46,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      * Map transforms an EventStream by creating
      * a new EventStream through a projection function.
      */
-    fun <R : Any?> map(transform: ((T?) -> R?)?): EventStream<R?>? {
+    fun <R : Any> map(transform: ((T?) -> R)?): EventStream<R>? {
         return EventStream(observable?.map(transform))
     }
 
@@ -60,7 +61,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
         predicate: ((T?, T?) -> Boolean)?,
         count: Int?,
         skip: Int? = count
-    ): EventStream<List<T?>?>? {
+    ): EventStream<List<T>>? {
         val sequenceEquals = observable
             ?.buffer(count!!, skip!!)
             ?.filter {
@@ -84,7 +85,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      * the subscriber through a ComplexEvent object when
      * both EventStreams happen within a given time frame.
      */
-    fun <R : Any?> merge(stream: EventStream<R?>?): ComplexEvent? {
+    fun <R : Any> merge(stream: EventStream<R>?): ComplexEvent? {
         val merged = Observable.merge(
             observable?.map { element -> Pair(element, (1 as Int?)) },
             stream?.observable?.map { element -> Pair(element, (2 as Int?)) }
@@ -99,7 +100,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
     /**
      * Window only emits events that happened within a given time frame.
      */
-    fun window(timespan: Long?, timeUnit: TimeUnit?): EventStream<T?>? {
+    fun window(timespan: Long?, timeUnit: TimeUnit?): EventStream<T>? {
         return EventStream(
             observable?.buffer(
                 timespan!!,
@@ -111,7 +112,7 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      * Union merges two EventStreams into one EventStream
      * that emits events from both streams as they arrive.
      */
-    fun union(stream: EventStream<T?>?): EventStream<T?>? {
+    fun union(stream: EventStream<T>?): EventStream<T>? {
         val merged = Observable.merge(
             observable,
             stream?.observable
@@ -124,50 +125,50 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      * Filters the accumulated from all EventStreams that
      * exists in current stream but not in given one.
      */
-//    fun not(stream: EventStream<T?>?): EventStream<T?>? {
-//        val streamAccumulated: EventStream<MutableList<T?>?>? =
-//            EventStream(
-//                stream?.accumulator()?.observable?.startWith(
-//                    ArrayList<T?>()
-//                )
-//            )
-//
-//        val filtered = observable?.withLatestFrom(streamAccumulated.observable)
-//            ?.filter { (event, accumulated) ->
-//                !accumulated.contains(event)
-//            }?.map {
-//                it.first
-//            }
-//
-//        return EventStream(streamAccumulated)
-//    }
+    fun not(stream: EventStream<T>?): EventStream<T>? {
+        val streamAccumulated: EventStream<MutableList<T>>? =
+            EventStream(
+                stream?.accumulator()?.observable?.startWith(
+                    ArrayList<T>()
+                )
+            )
+
+        val filtered = observable?.withLatestFrom(streamAccumulated?.observable!!)
+            ?.filter { (event, accumulated) ->
+                !accumulated.contains(event)
+            }?.map {
+                it.first
+            }
+
+        return EventStream(filtered)
+    }
 
     /**
      * Filters the accumulated from all EventStreams
      * that exists in current stream and in given one.
      */
-//    fun intersect(stream: EventStream<T?>?): EventStream<T?>? {
-//        val streamAccumulated: EventStream<MutableList<T?>?>? =
-//            EventStream(
-//                stream?.accumulator()?.observable?.startWith(
-//                    arrayListOf<T?>()
-//                )
-//            )
-//
-//        val filtered = observable?.withLatestFrom(streamAccumulated?.observable)
-//            ?.filter { (event, accumulated) ->
-//                !accumulated.contains(event)
-//            }?.map {
-//                it.first
-//            }?.distinct()
-//
-//        return EventStream(filtered)
-//    }
+    fun intersect(stream: EventStream<T>?): EventStream<T>? {
+        val streamAccumulated: EventStream<MutableList<T>>? =
+            EventStream(
+                stream?.accumulator()?.observable?.startWith(
+                    arrayListOf<T>()
+                )
+            )
+
+        val filtered = observable?.withLatestFrom(streamAccumulated?.observable!!)
+            ?.filter { (event, accumulated) ->
+                accumulated.contains(event)
+            }?.map {
+                it.first
+            }?.distinct()
+
+        return EventStream(filtered)
+    }
 
     /**
      * Return a stream without duplicates.
      */
-    fun distinct(): EventStream<T?>? {
+    fun distinct(): EventStream<T>? {
         return EventStream(observable?.distinct())
     }
 
@@ -175,9 +176,9 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      * Compare events by given comparator and return
      * a stream with all of then ordered by accordingly.
      */
-    fun <R : Comparable<R>> orderBy(comparison: ((T?) -> R?)): EventStream<List<T?>?>? {
+    fun <R : Comparable<R>> orderBy(comparison: ((T?) -> R?)): EventStream<List<T>>? {
         val ordered = accumulator()?.map {
-            it?.sortedBy(comparison)
+            it!!.sortedBy(comparison)
         }?.observable
 
         return EventStream(ordered)
@@ -187,9 +188,9 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
      * Compare events by given comparator and return
      * a stream with all of then grouped by accordingly.
      */
-    fun <R> groupBy(comparison: ((T?) -> R?)): EventStream<Map<R?, List<T?>>>? {
+    fun <R> groupBy(comparison: ((T?) -> R?)): EventStream<Map<R?, List<T>>>? {
         val grouped = accumulator()?.map {
-            it?.groupBy(comparison)
+            it!!.groupBy(comparison)
         }?.observable
 
         return EventStream(grouped)
@@ -198,9 +199,9 @@ class EventStream<T : Any?>(val observable: Observable<T?>?) {
     /**
      * Scans the observable to get an accumulation of events as a List Stream.
      */
-    fun accumulator(): EventStream<MutableList<T?>?>? {
+    fun accumulator(): EventStream<MutableList<T>>? {
         val accumulator = observable?.scan(
-            mutableListOf<T?>(),
+            mutableListOf<T>(),
             { accumulated, item ->
                 accumulated.add(item)
                 accumulated
