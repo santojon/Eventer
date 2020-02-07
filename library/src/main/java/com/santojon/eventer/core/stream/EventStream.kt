@@ -17,8 +17,22 @@ class EventStream<T : Any>(val observable: Observable<T>?) {
     /**
      * Subscribe to get stream
      */
+    fun subscribe(onNext: ((T?) -> Unit)?, onError: ((Throwable?) -> Unit)?) {
+        observable?.subscribe(onNext, onError)
+    }
+
+    /**
+     * Subscribe to get stream
+     */
     fun onReceive(onNext: ((T?) -> Unit)?) {
         subscribe(onNext)
+    }
+
+    /**
+     * Subscribe to get stream
+     */
+    fun onReceive(onNext: ((T?) -> Unit)?, onError: ((Throwable?) -> Unit)?) {
+        subscribe(onNext, onError)
     }
 
     /**
