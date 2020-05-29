@@ -65,7 +65,7 @@ class EventStream<T : Any>(val observable: Observable<T>?) {
     /**
      * Filter and Map Events by Class for Iterables
      */
-    inline fun <reified R : Any, reified K : Any> isIterableAs(): EventStream<R>? {
+    inline fun <reified R : Iterable<K>, reified K : Any> isIterableAs(): EventStream<R>? {
         return EventStream(
             filter {
                 when (it) {
