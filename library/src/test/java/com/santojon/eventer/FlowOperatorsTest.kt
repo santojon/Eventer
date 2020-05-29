@@ -9,7 +9,6 @@ import org.junit.Test
  * Tests of CEP operators related to Flow Management
  */
 class FlowOperatorsTest {
-
     /**
      *
      * Helpers and Utils
@@ -44,7 +43,6 @@ class FlowOperatorsTest {
             return value.toString()
         }
     }
-
 
     /**
      *

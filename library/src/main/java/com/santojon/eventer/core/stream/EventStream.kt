@@ -6,7 +6,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import java.util.concurrent.TimeUnit
 
 class EventStream<T : Any>(val observable: Observable<T>?) {
-
     /**
      * Subscribe to get stream
      */
@@ -42,6 +41,41 @@ class EventStream<T : Any>(val observable: Observable<T>?) {
         return EventStream(
             filter {
                 it is R?
+            }?.map {
+                it as R
+            }?.observable
+        )
+    }
+
+    /**
+     * Filter and Map Events by Class with comparator
+     */
+    inline fun <reified R : Any> isAs(crossinline comparator: ((R?) -> Boolean) = { _: R? -> true }): EventStream<R>? {
+        return EventStream(
+            filter {
+                it is R?
+            }?.filter {
+                comparator(it as R?)
+            }?.map {
+                it as R
+            }?.observable
+        )
+    }
+
+    /**
+     * Filter and Map Events by Class for Iterables
+     */
+    inline fun <reified R : Any, reified K : Any> isIterableAs(): EventStream<R>? {
+        return EventStream(
+            filter {
+                when (it) {
+                    is Iterable<*> -> {
+                        it.filterIsInstance<K>().isNotEmpty()
+                    }
+                    else -> {
+                        it is R?
+                    }
+                }
             }?.map {
                 it as R
             }?.observable

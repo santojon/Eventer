@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Eventer.iml" filepath="$PROJECT_DIR$/Eventer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Eventer.iml" filepath="$PROJECT_DIR$/Eventer.iml" group="Eventer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/com.santojon-library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/com.santojon-library.iml" group="Eventer/library" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>
