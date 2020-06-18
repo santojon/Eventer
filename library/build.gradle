@@ -52,7 +52,7 @@ ext {
     siteUrl = 'https://github.com/santojon/Eventer'
     gitUrl = 'https://github.com/santojon/Eventer.git'
     releaseDate = new Date()
-    libraryVersion = '1.0.2'
+    libraryVersion = '1.0.3'
     developerId = 'santojon'
     developerName = 'Jonathan Gomes dos Santos'
     developerEmail = 'santojon5@gmail.com'
