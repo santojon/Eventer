@@ -50,7 +50,7 @@ class EventStream<T : Any>(val observable: Observable<T>?) {
     /**
      * Filter and Map Events by Class with comparator
      */
-    inline fun <reified R : Any> isAs(crossinline comparator: ((R?) -> Boolean) = { _: R? -> true }): EventStream<R>? {
+    inline fun <reified R : Any> isAs(crossinline comparator: ((R?) -> Boolean)): EventStream<R>? {
         return EventStream(
             filter {
                 it is R?
@@ -63,7 +63,7 @@ class EventStream<T : Any>(val observable: Observable<T>?) {
     }
 
     /**
-     * Filter and Map Events by Class for Iterables
+     * Filter and Map Events by Class for not empty Iterables
      */
     inline fun <reified R : Iterable<K>, reified K : Any> isIterableAs(): EventStream<R>? {
         return EventStream(
@@ -78,6 +78,19 @@ class EventStream<T : Any>(val observable: Observable<T>?) {
                 }
             }?.map {
                 it as R
+            }?.observable
+        )
+    }
+
+    /**
+     * Filter Events by vararg Classes
+     */
+    fun isAnyOf(vararg args: T): EventStream<T>? {
+        return EventStream(
+            filter { event ->
+                args.map { arg ->
+                    event!!::class == arg
+                }.any { it }
             }?.observable
         )
     }

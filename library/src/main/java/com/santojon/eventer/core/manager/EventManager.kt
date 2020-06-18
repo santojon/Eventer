@@ -17,22 +17,23 @@ class EventManager<T : Any> {
      * Add event to Subject
      */
     fun addEvent(event: T?) {
-        evs?.onNext(event!!)
+        event?.let { evs?.onNext(event) }
     }
 
-    /**
-     * Add event to Subject
-     */
-    fun publish(event: T?) {
-        addEvent(event)
-    }
+    fun publish(event: T?) = addEvent(event)
+    fun sendEvent(event: T?) = addEvent(event)
 
     /**
-     * Add event to Subject
+     * Add events to Subject
      */
-    fun sendEvent(event: T?) {
-        addEvent(event)
+    fun addEvents(vararg events: T?) {
+        events.forEach { event ->
+            addEvent(event)
+        }
     }
+
+    fun publishMany(vararg events: T?) = addEvents(*events)
+    fun sendEvents(vararg events: T?) = addEvents(*events)
 
     /**
      * Return stream of events
@@ -46,4 +47,3 @@ class EventManager<T : Any> {
         evs = PublishSubject.create()
     }
 }
-
