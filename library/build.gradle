@@ -9,7 +9,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0.4"
+        versionName "1.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -32,6 +32,7 @@ dependencies {
     //  ReactiveX libraries
     implementation 'io.reactivex.rxjava2:rxjava:2.2.17'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     // Tests
     testImplementation 'junit:junit:4.13'
@@ -52,7 +53,7 @@ ext {
     siteUrl = 'https://github.com/santojon/Eventer'
     gitUrl = 'https://github.com/santojon/Eventer.git'
     releaseDate = new Date()
-    libraryVersion = '1.0.4'
+    libraryVersion = '1.0.5'
     developerId = 'santojon'
     developerName = 'Jonathan Gomes dos Santos'
     developerEmail = 'santojon5@gmail.com'
