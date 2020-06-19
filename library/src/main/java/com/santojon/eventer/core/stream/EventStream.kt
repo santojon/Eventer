@@ -4,7 +4,6 @@ import com.santojon.eventer.core.event.ComplexEvent
 import com.santojon.eventer.core.scheduler.EventSchedulers
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.withLatestFrom
 import java.util.concurrent.TimeUnit
 
@@ -22,8 +21,8 @@ class EventStream<T : Any>(
     /**
      * Subscribe to get stream
      */
-    fun subscribe(onNext: ((T?) -> Unit), onError: ((Throwable?) -> Unit)): Disposable? {
-        return when (subscribeOn) {
+    fun subscribe(onNext: ((T?) -> Unit), onError: ((Throwable?) -> Unit)) {
+        when (subscribeOn) {
             null -> {
                 when (observeOn) {
                     null -> observable?.subscribe(onNext, onError)
@@ -40,8 +39,8 @@ class EventStream<T : Any>(
         }
     }
 
-    fun subscribe(onNext: ((T?) -> Unit)): Disposable? {
-        return subscribe(onNext, {})
+    fun subscribe(onNext: ((T?) -> Unit)) {
+        subscribe(onNext, {})
     }
 
     fun onReceive(onNext: ((T?) -> Unit), onError: ((Throwable?) -> Unit)) =

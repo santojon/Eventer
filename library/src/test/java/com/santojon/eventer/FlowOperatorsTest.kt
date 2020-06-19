@@ -1,6 +1,8 @@
 package com.santojon.eventer
 
 import com.santojon.eventer.core.event.Event
+import com.santojon.eventer.core.manager.EventManager
+import com.santojon.eventer.core.scheduler.EventSchedulers
 import com.santojon.eventer.core.stream.EventStream
 import com.santojon.eventer.test.EventStreamSimulator
 import org.junit.Test
@@ -42,6 +44,8 @@ class FlowOperatorsTest {
         override fun toString(): String {
             return value.toString()
         }
+
+        companion object
     }
 
     /**
@@ -70,6 +74,28 @@ class FlowOperatorsTest {
             IntEvent(5),
             IntEvent(12)
         )
+
+        val manager: EventManager<Any> = EventManager(EventSchedulers.IO, EventSchedulers.IO)
+        manager.events?.isAnyOf(IntEvent::class, String::class, Long::class)?.onReceive({ event ->
+            when (event) {
+                is Double -> {
+                    println(event::class.simpleName + event.toString())
+                }
+                is Long -> {
+                    println(event::class.simpleName + event.toString())
+                }
+                is IntEvent -> {
+                    println(event::class.simpleName + event.toString())
+                }
+            }
+        }, {
+            println(it?.message)
+        })
+
+        manager.sendEvents(IntEvent(1), 1, "qwe", 1.0)
+
+        manager.sendEvent(1L)
+
 
         val output = simulator.simulate(events, ::distinctFunction)
         assert(expected == output)
