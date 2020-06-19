@@ -1,9 +1,13 @@
 package com.santojon.eventer.core.manager
 
 import com.santojon.eventer.core.stream.EventStream
+import io.reactivex.Scheduler
 import io.reactivex.subjects.PublishSubject
 
-class EventManager<T : Any> {
+class EventManager<T : Any>(
+    val subscribeOn: Scheduler? = null,
+    val observeOn: Scheduler? = null
+) {
     // Events subject
     private var evs: PublishSubject<T>? = PublishSubject.create()
 
@@ -39,7 +43,7 @@ class EventManager<T : Any> {
      * Return stream of events
      */
     fun asStream(): EventStream<T>? {
-        return EventStream(evs)
+        return EventStream(evs, subscribeOn, observeOn)
     }
 
     fun clear() {

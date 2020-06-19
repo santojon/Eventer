@@ -2,37 +2,46 @@ package com.santojon.eventer.core.stream
 
 import com.santojon.eventer.core.event.ComplexEvent
 import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.withLatestFrom
 import java.util.concurrent.TimeUnit
 
-class EventStream<T : Any>(val observable: Observable<T>?) {
-    /**
-     * Subscribe to get stream
-     */
-    fun subscribe(onNext: ((T?) -> Unit)?) {
-        observable?.subscribe(onNext)
-    }
+class EventStream<T : Any>(
+    val observable: Observable<T>?,
+    val subscribeOn: Scheduler? = null,
+    val observeOn: Scheduler? = null
+) {
 
     /**
      * Subscribe to get stream
      */
-    fun subscribe(onNext: ((T?) -> Unit)?, onError: ((Throwable?) -> Unit)?) {
-        observable?.subscribe(onNext, onError)
+    fun subscribe(onNext: ((T?) -> Unit), onError: ((Throwable?) -> Unit)): Disposable? {
+        return when (subscribeOn) {
+            null -> {
+                when (observeOn) {
+                    null -> observable?.subscribe(onNext, onError)
+                    else -> observable?.observeOn(observeOn)?.subscribe(onNext, onError)
+                }
+            }
+            else -> {
+                when (observeOn) {
+                    null -> observable?.subscribeOn(subscribeOn)?.subscribe(onNext, onError)
+                    else -> observable?.subscribeOn(subscribeOn)?.observeOn(observeOn)
+                        ?.subscribe(onNext, onError)
+                }
+            }
+        }
     }
 
-    /**
-     * Subscribe to get stream
-     */
-    fun onReceive(onNext: ((T?) -> Unit)?) {
-        subscribe(onNext)
+    fun subscribe(onNext: ((T?) -> Unit)): Disposable? {
+        return subscribe(onNext, {})
     }
 
-    /**
-     * Subscribe to get stream
-     */
-    fun onReceive(onNext: ((T?) -> Unit)?, onError: ((Throwable?) -> Unit)?) {
+    fun onReceive(onNext: ((T?) -> Unit), onError: ((Throwable?) -> Unit)) =
         subscribe(onNext, onError)
-    }
+
+    fun onReceive(onNext: ((T?) -> Unit)) = subscribe(onNext)
 
     /**
      * Filter and Map Events by Class
@@ -268,7 +277,6 @@ class EventStream<T : Any>(val observable: Observable<T>?) {
                 accumulated
             }
         )
-
         return EventStream(accumulator)
     }
 }
