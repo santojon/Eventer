@@ -1,5 +1,6 @@
 package com.santojon.eventer.core.manager
 
+import com.santojon.eventer.core.scheduler.EventSchedulers
 import com.santojon.eventer.core.stream.EventStream
 import io.reactivex.Scheduler
 import io.reactivex.subjects.PublishSubject
@@ -8,6 +9,11 @@ class EventManager<T : Any>(
     val subscribeOn: Scheduler? = null,
     val observeOn: Scheduler? = null
 ) {
+    constructor(subscribeOn: Int?, observeOn: Int?) : this(
+        EventSchedulers.from(subscribeOn),
+        EventSchedulers.from(observeOn)
+    )
+
     // Events subject
     private var evs: PublishSubject<T>? = PublishSubject.create()
 

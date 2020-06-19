@@ -1,6 +1,7 @@
 package com.santojon.eventer.core.stream
 
 import com.santojon.eventer.core.event.ComplexEvent
+import com.santojon.eventer.core.scheduler.EventSchedulers
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
@@ -12,6 +13,11 @@ class EventStream<T : Any>(
     val subscribeOn: Scheduler? = null,
     val observeOn: Scheduler? = null
 ) {
+    constructor(observable: Observable<T>?, subscribeOn: Int?, observeOn: Int?) : this(
+        observable,
+        EventSchedulers.from(subscribeOn),
+        EventSchedulers.from(observeOn)
+    )
 
     /**
      * Subscribe to get stream
