@@ -9,7 +9,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0.7"
+        versionName "1.0.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -53,7 +53,7 @@ ext {
     siteUrl = 'https://github.com/santojon/Eventer'
     gitUrl = 'https://github.com/santojon/Eventer.git'
     releaseDate = new Date()
-    libraryVersion = '1.0.7'
+    libraryVersion = '1.0.8'
     developerId = 'santojon'
     developerName = 'Jonathan Gomes dos Santos'
     developerEmail = 'santojon5@gmail.com'

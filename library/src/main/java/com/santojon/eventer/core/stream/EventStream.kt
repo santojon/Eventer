@@ -21,32 +21,51 @@ class EventStream<T : Any>(
     /**
      * Subscribe to get stream
      */
-    fun subscribe(onNext: ((T?) -> Unit), onError: ((Throwable?) -> Unit)) {
+    fun subscribe(
+        onNext: (T?) -> Unit,
+        onError: (Throwable?) -> Unit,
+        onComplete: () -> Unit
+    ) {
         when (subscribeOn) {
             null -> {
                 when (observeOn) {
-                    null -> observable?.subscribe(onNext, onError)
-                    else -> observable?.observeOn(observeOn)?.subscribe(onNext, onError)
+                    null -> observable?.subscribe(onNext, onError, onComplete)
+                    else -> observable?.observeOn(observeOn)?.subscribe(onNext, onError, onComplete)
                 }
             }
             else -> {
                 when (observeOn) {
-                    null -> observable?.subscribeOn(subscribeOn)?.subscribe(onNext, onError)
+                    null -> observable?.subscribeOn(subscribeOn)
+                        ?.subscribe(onNext, onError, onComplete)
                     else -> observable?.subscribeOn(subscribeOn)?.observeOn(observeOn)
-                        ?.subscribe(onNext, onError)
+                        ?.subscribe(onNext, onError, onComplete)
                 }
             }
         }
     }
 
-    fun subscribe(onNext: ((T?) -> Unit)) {
-        subscribe(onNext, {})
+    fun subscribe(onNext: (T?) -> Unit, onError: (Throwable?) -> Unit) {
+        subscribe(onNext, onError, {})
     }
 
-    fun onReceive(onNext: ((T?) -> Unit), onError: ((Throwable?) -> Unit)) =
-        subscribe(onNext, onError)
+    fun subscribe(onNext: (T?) -> Unit, onComplete: () -> Unit) {
+        subscribe(onNext, {}, onComplete)
+    }
 
-    fun onReceive(onNext: ((T?) -> Unit)) = subscribe(onNext)
+    fun subscribe(onNext: (T?) -> Unit) {
+        subscribe(onNext, {}, {})
+    }
+
+    fun onReceive(onNext: (T?) -> Unit, onError: (Throwable?) -> Unit, onComplete: () -> Unit) =
+        subscribe(onNext, onError, onComplete)
+
+    fun onReceive(onNext: (T?) -> Unit, onError: (Throwable?) -> Unit) =
+        subscribe(onNext, onError, {})
+
+    fun onReceive(onNext: (T?) -> Unit, onComplete: () -> Unit) =
+        subscribe(onNext, {}, onComplete)
+
+    fun onReceive(onNext: (T?) -> Unit) = subscribe(onNext)
 
     /**
      * Filter and Map Events by Class
