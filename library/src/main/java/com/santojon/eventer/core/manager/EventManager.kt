@@ -5,10 +5,16 @@ import com.santojon.eventer.core.stream.EventStream
 import io.reactivex.Scheduler
 import io.reactivex.subjects.PublishSubject
 
+/**
+ * Used to manage events using [EventStream]
+ */
 class EventManager<T : Any>(
     val subscribeOn: Scheduler? = null,
     val observeOn: Scheduler? = null
 ) {
+    /**¬
+     * Alternative constructor
+     */
     constructor(subscribeOn: Int?, observeOn: Int?) : this(
         EventSchedulers.from(subscribeOn),
         EventSchedulers.from(observeOn)
@@ -17,41 +23,30 @@ class EventManager<T : Any>(
     // Events subject
     private var evs: PublishSubject<T>? = PublishSubject.create()
 
-    // Return stream of events
-    val events: EventStream<T>? = asStream()
-
-    // Return stream of events
-    val stream: EventStream<T>? = asStream()
-
     /**
      * Add event to Subject
      */
-    fun addEvent(event: T?) {
-        event?.let { evs?.onNext(event) }
-    }
-
+    fun addEvent(event: T?) = event?.let { evs?.onNext(event) }
     fun publish(event: T?) = addEvent(event)
     fun sendEvent(event: T?) = addEvent(event)
 
     /**
      * Add events to Subject
      */
-    fun addEvents(vararg events: T?) {
-        events.forEach { event ->
-            addEvent(event)
-        }
-    }
-
+    fun addEvents(vararg events: T?) = events.forEach { event -> addEvent(event) }
     fun publishMany(vararg events: T?) = addEvents(*events)
     fun sendEvents(vararg events: T?) = addEvents(*events)
 
     /**
      * Return stream of events
      */
-    fun asStream(): EventStream<T>? {
-        return EventStream(evs, subscribeOn, observeOn)
-    }
+    fun asStream(): EventStream<T>? = EventStream(evs, subscribeOn, observeOn)
+    val events: EventStream<T>? = asStream()
+    val stream: EventStream<T>? = asStream()
 
+    /**
+     * Clear the eventStream
+     */
     fun clear() {
         evs = null
         evs = PublishSubject.create()

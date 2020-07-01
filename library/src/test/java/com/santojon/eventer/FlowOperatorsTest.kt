@@ -71,8 +71,7 @@ class FlowOperatorsTest {
             IntEvent(12)
         )
 
-        val output = simulator.simulate(events, ::distinctFunction)
-        assert(expected == output)
+        assert(expected == simulator.simulate(events, ::distinctFunction))
     }
 
     /**
@@ -97,12 +96,8 @@ class FlowOperatorsTest {
             IntEvent(12)
         )
 
-        val expected = listOf(
-            IntEvent(5)
-        )
-
-        val output = simulator.simulate(events1, events2, ::exceptFunction)
-        assert(expected == output)
+        val expected = listOf(IntEvent(5))
+        assert(expected == simulator.simulate(events1, events2, ::exceptFunction))
     }
 
     /**
@@ -132,8 +127,7 @@ class FlowOperatorsTest {
             IntEvent(12)
         )
 
-        val output = simulator.simulate(events1, events2, ::intersectFunction)
-        assert(expected == output)
+        assert(expected == simulator.simulate(events1, events2, ::intersectFunction))
     }
 
     /**
@@ -159,8 +153,7 @@ class FlowOperatorsTest {
             IntEvent(12)
         )
 
-        val output = simulator.simulateCompare(events, ::orderByFunction)
-        assert(expected == output)
+        assert(expected == simulator.simulateCompare(events, ::orderByFunction))
     }
 
     /**
@@ -198,8 +191,7 @@ class FlowOperatorsTest {
             )
         )
 
-        val output = simulator.simulate(events, ::groupByFunction)
-        assert(expected == output)
+        assert(expected == simulator.simulate(events, ::groupByFunction))
     }
 
 
@@ -212,9 +204,8 @@ class FlowOperatorsTest {
     /**
      * Filter the distinct Events
      */
-    private fun distinctFunction(stream: EventStream<IntEvent>?): EventStream<IntEvent>? {
-        return stream?.distinct()
-    }
+    private fun distinctFunction(stream: EventStream<IntEvent>?): EventStream<IntEvent>? =
+        stream?.distinct()
 
     /**
      * Executes Except operator
@@ -222,9 +213,7 @@ class FlowOperatorsTest {
     private fun exceptFunction(
         stream1: EventStream<IntEvent>?,
         stream2: EventStream<IntEvent>?
-    ): EventStream<IntEvent>? {
-        return stream1?.not(stream2)
-    }
+    ): EventStream<IntEvent>? = stream1?.not(stream2)
 
     /**
      * Executes Intersect operator
@@ -232,25 +221,17 @@ class FlowOperatorsTest {
     private fun intersectFunction(
         stream1: EventStream<IntEvent>?,
         stream2: EventStream<IntEvent>?
-    ): EventStream<IntEvent>? {
-        return stream1?.intersect(stream2)
-    }
+    ): EventStream<IntEvent>? = stream1?.intersect(stream2)
 
     /**
      * Executes OrderBy operator
      */
-    private fun orderByFunction(stream: EventStream<IntEvent>?): EventStream<List<IntEvent>>? {
-        return stream?.orderBy { event ->
-            event?.value
-        }
-    }
+    private fun orderByFunction(stream: EventStream<IntEvent>?): EventStream<List<IntEvent>>? =
+        stream?.orderBy { event -> event?.value }
 
     /**
      * Executes GroupBy operator
      */
-    private fun groupByFunction(stream: EventStream<IntEvent>?): EventStream<Map<Int?, List<IntEvent>>>? {
-        return stream?.groupBy { event ->
-            event?.value
-        }
-    }
+    private fun groupByFunction(stream: EventStream<IntEvent>?): EventStream<Map<Int?, List<IntEvent>>>? =
+        stream?.groupBy { event -> event?.value }
 }

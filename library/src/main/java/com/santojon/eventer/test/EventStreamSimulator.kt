@@ -1,7 +1,7 @@
 package com.santojon.eventer.test
 
 import com.santojon.eventer.core.manager.EventManager
-import com.santojon.eventer.core.stream.EventStream
+import com.santojon.eventer.core.stream.*
 
 /**
  * Used to simulate Events subscription
@@ -14,17 +14,12 @@ class EventStreamSimulator<T : Any> {
      * Simulate Events list throughout [EventStream] passing
      * a CEP operator function that needs NO PARAMETERS
      */
-    fun simulate(
-        events: List<T?>?,
-        function: ((stream: EventStream<T>?) -> EventStream<T>?)
-    ): List<T?>? {
+    fun simulate(events: List<T?>?, function: SingleStreamFunction<T>): List<T?>? {
         //create the result variable
         val result = arrayListOf<T?>()
 
         // Apply given Function to stream, and subscribe to result
-        function(primaryEventManager.asStream())?.subscribe {
-            result.add(it!!)
-        }
+        function(primaryEventManager.asStream())?.subscribe { result.add(it!!) }
 
         // add all events to stream
         eventsFromEntries(events, primaryEventManager)
@@ -38,7 +33,7 @@ class EventStreamSimulator<T : Any> {
     fun simulate(
         events1: List<T?>?,
         events2: List<T?>?,
-        function: ((stream1: EventStream<T>?, stream2: EventStream<T>?) -> EventStream<T>?)
+        function: DoubleStreamFunction<T>
     ): List<T?>? {
         //create the result variable
         val result = arrayListOf<T?>()
@@ -60,17 +55,12 @@ class EventStreamSimulator<T : Any> {
      * Simulate Events list throughout [EventStream] passing
      * a CEP operator function that needs a [Comparator]
      */
-    fun simulateCompare(
-        events: List<T?>,
-        function: ((stream: EventStream<T>?) -> EventStream<List<T>>?)
-    ): List<T?>? {
+    fun simulateCompare(events: List<T?>, function: CompareFunction<T>): List<T?>? {
         //create the result variable
         var result = listOf<T?>()
 
         // Apply given Function to stream, and subscribe to result
-        function(primaryEventManager.asStream())?.subscribe {
-            result = it!!
-        }
+        function(primaryEventManager.asStream())?.subscribe { result = it!! }
 
         // add all events to stream
         eventsFromEntries(events, primaryEventManager)
@@ -83,15 +73,13 @@ class EventStreamSimulator<T : Any> {
      */
     fun <R : Any?> simulate(
         events: List<T?>?,
-        function: ((stream: EventStream<T>?) -> EventStream<Map<R?, List<T>>>?)
+        function: GroupingFunction<R, T>
     ): Map<R?, List<T?>>? {
         //create the result variable
         var result = mapOf<R?, List<T?>>()
 
         // Apply given Function to stream, and subscribe to result
-        function(primaryEventManager.asStream())?.subscribe {
-            result = it!!
-        }
+        function(primaryEventManager.asStream())?.subscribe { result = it!! }
 
         // add all events to stream
         eventsFromEntries(events, primaryEventManager)
@@ -101,11 +89,8 @@ class EventStreamSimulator<T : Any> {
     /**
      * Add Events to [EventManager]
      */
-    private fun eventsFromEntries(entries: List<T?>?, manager: EventManager<T>?) {
-        entries?.forEach {
-            manager?.addEvent(it)
-        }
-    }
+    private fun eventsFromEntries(entries: List<T?>?, manager: EventManager<T>?) =
+        entries?.forEach { manager?.addEvent(it) }
 
     /**
      * Clear [EventManager]s
