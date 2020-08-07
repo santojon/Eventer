@@ -4,7 +4,7 @@ import com.santojon.eventer.core.stream.EventStream
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
 
-class ComplexEvent(
+open class ComplexEvent(
     val observable: Observable<Pair<Any, Int?>>?,
     val numberOfEvents: Int?,
     val timespan: Long? = 5,

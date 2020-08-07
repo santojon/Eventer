@@ -1,6 +1,7 @@
 package com.santojon.eventer.core.stream
 
 import com.santojon.eventer.core.event.ComplexEvent
+import com.santojon.eventer.core.event.ListEvent
 import com.santojon.eventer.core.scheduler.EventSchedulers
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -96,7 +97,7 @@ class EventStream<T : Any>(
     }
 
     /**
-     * Filter and Map Events by Class for not empty Iterables
+     * Filter and Map Events by Class for not empty [Iterable]s
      */
     inline fun <reified R : Iterable<K>, reified K : Any> isIterableAs(): EventStream<R>? {
         return EventStream(
@@ -104,6 +105,30 @@ class EventStream<T : Any>(
                 when (it) {
                     is Iterable<*> -> {
                         it.filterIsInstance<K>().isNotEmpty()
+                    }
+                    else -> {
+                        it is R?
+                    }
+                }
+            }?.map {
+                it as R
+            }?.observable
+        )
+    }
+
+    /**
+     * Filter and Map Events by Class for [ListEvent]s
+     */
+    inline fun <reified R : ListEvent<K>, reified K : Any> isListEventOf(): EventStream<R>? {
+        return EventStream(
+            filter {
+                when (it) {
+                    is ListEvent<*> -> {
+                        if (it.isEmpty()) {
+                            it.validType<K>()
+                        } else {
+                            it.filterIsInstance<K>().isNotEmpty()
+                        }
                     }
                     else -> {
                         it is R?
