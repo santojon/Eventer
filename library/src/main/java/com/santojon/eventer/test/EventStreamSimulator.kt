@@ -1,7 +1,7 @@
 package com.santojon.eventer.test
 
 import com.santojon.eventer.core.manager.EventManager
-import com.santojon.eventer.core.stream.*
+import com.santojon.eventer.core.stream.EventStream
 
 /**
  * Used to simulate Events subscription
@@ -80,6 +80,25 @@ class EventStreamSimulator<T : Any> {
 
         // Apply given Function to stream, and subscribe to result
         function(primaryEventManager.asStream())?.subscribe { result = it!! }
+
+        // add all events to stream
+        eventsFromEntries(events, primaryEventManager)
+        return result
+    }
+
+    /**
+     * Simulate Events list throughout [EventStream] passing
+     * an operator function that transforms stream filtering
+     */
+    fun <K : Any> simulateTransform(
+        events: List<T?>?,
+        function: SingleStreamTransformFunction<T, K>
+    ): List<K?>? {
+        //create the result variable
+        val result = arrayListOf<K?>()
+
+        // Apply given Function to stream, and subscribe to result
+        function(primaryEventManager.asStream())?.subscribe { result.add(it!!) }
 
         // add all events to stream
         eventsFromEntries(events, primaryEventManager)

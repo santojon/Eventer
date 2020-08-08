@@ -6,3 +6,4 @@ typealias GroupingFunction<R, T> = (stream: EventStream<T>?) -> EventStream<Map<
 typealias CompareFunction<T> = (stream: EventStream<T>?) -> EventStream<List<T>>?
 typealias DoubleStreamFunction<T> = (stream1: EventStream<T>?, stream2: EventStream<T>?) -> EventStream<T>?
 typealias SingleStreamFunction<T> = (stream: EventStream<T>?) -> EventStream<T>?
+typealias SingleStreamTransformFunction<T, K> = (stream: EventStream<T>?) -> EventStream<K>?

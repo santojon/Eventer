@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  *
  * @param kClass: The [KClass] of [T] to validate for empty lists
  */
-open class ListEvent<T : Any>(val kClass: KClass<T>) : ArrayList<T>(), Event {
+open class ListEvent<T : Any>(open val kClass: KClass<T>) : ArrayList<T>(), Event {
     /**
      * Validate type of [ListEvent]
      * Used for empty lists validation
