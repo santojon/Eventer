@@ -1,2 +1,2 @@
 # Eventer
-Complex Event Processing library for Kotlin made on top of RXJava/RXKotlin
+Complex Event Processing library for AndroidX (Kotlin) made on top of RXJava/RXKotlin/RxAndroid
