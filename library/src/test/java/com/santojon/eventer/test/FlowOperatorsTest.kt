@@ -1,54 +1,29 @@
-package com.santojon.eventer
+package com.santojon.eventer.test
 
-import com.santojon.eventer.core.event.Event
 import com.santojon.eventer.core.stream.EventStream
-import com.santojon.eventer.test.EventStreamSimulator
+import com.santojon.eventer.event.IntEvent
 import org.junit.Test
 
 /**
  * Tests of CEP operators related to Flow Management
  */
 class FlowOperatorsTest {
-    /**
+    /*****************************************************
      *
      * Helpers and Utils
      *
-     */
+     *****************************************************/
 
     /**
      * Simulator instance
      */
     private val simulator = EventStreamSimulator<IntEvent>()
 
-    /**
-     * Class that represents Int event
-     */
-    private class IntEvent(val value: Int) : Event, Comparable<IntEvent> {
-        override fun compareTo(other: IntEvent): Int {
-            return this.value.compareTo(other.value)
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (other is IntEvent) {
-                return this.value == other.value
-            }
-            return super.equals(other)
-        }
-
-        override fun hashCode(): Int {
-            return value.hashCode()
-        }
-
-        override fun toString(): String {
-            return value.toString()
-        }
-    }
-
-    /**
+    /*****************************************************
      *
      * Tests
      *
-     */
+     *****************************************************/
 
     /**
      * Verify return distinct Events from source
@@ -96,7 +71,11 @@ class FlowOperatorsTest {
             IntEvent(12)
         )
 
-        val expected = listOf(IntEvent(5))
+        val expected = listOf(
+            IntEvent(
+                5
+            )
+        )
         assert(expected == simulator.simulate(events1, events2, ::exceptFunction))
     }
 
@@ -195,11 +174,11 @@ class FlowOperatorsTest {
     }
 
 
-    /**
+    /*****************************************************
      *
-     * CEP using functions
+     * Functions to simulate
      *
-     */
+     *****************************************************/
 
     /**
      * Filter the distinct Events
