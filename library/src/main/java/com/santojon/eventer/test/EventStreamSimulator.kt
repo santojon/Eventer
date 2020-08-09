@@ -58,12 +58,12 @@ class EventStreamSimulator<T : Any> {
      * Simulate Events list throughout [EventStream] passing
      * an operator function that needs a [Comparator]
      */
-    fun simulateCompare(events: List<T?>, function: CompareFunction<T>): List<T?>? {
+    fun <K : List<T>> simulateCompare(events: List<T?>, function: CompareFunction<T, K>): K? {
         //create the result variable
-        var result = listOf<T?>()
+        var result: K? = null
 
         // Apply given Function to stream, and subscribe to result
-        function(primaryEventManager.asStream())?.subscribe { result = it!! }
+        function(primaryEventManager.asStream())?.subscribe { result = it }
 
         // add all events to stream
         eventsFromEntries(events, primaryEventManager)
