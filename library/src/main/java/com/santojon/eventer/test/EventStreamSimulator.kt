@@ -12,11 +12,14 @@ class EventStreamSimulator<T : Any> {
 
     /**
      * Simulate Events list throughout [EventStream] passing
-     * a CEP operator function that needs NO PARAMETERS
+     * an operator function that needs NO PARAMETERS or (CROSS)INLINE PARAMETERS
      */
-    fun simulate(events: List<T?>?, function: SingleStreamFunction<T>): List<T?>? {
+    fun <K : Any> simulate(
+        events: List<T?>?,
+        function: SingleStreamFunction<T, K>
+    ): List<K?>? {
         //create the result variable
-        val result = arrayListOf<T?>()
+        val result = arrayListOf<K?>()
 
         // Apply given Function to stream, and subscribe to result
         function(primaryEventManager.asStream())?.subscribe { result.add(it!!) }
@@ -28,7 +31,7 @@ class EventStreamSimulator<T : Any> {
 
     /**
      * Simulate Events list throughout [EventStream] passing
-     * a CEP operator function that needs an [EventStream] as parameter
+     * an operator function that needs an [EventStream] as parameter
      */
     fun simulate(
         events1: List<T?>?,
@@ -53,7 +56,7 @@ class EventStreamSimulator<T : Any> {
 
     /**
      * Simulate Events list throughout [EventStream] passing
-     * a CEP operator function that needs a [Comparator]
+     * an operator function that needs a [Comparator]
      */
     fun simulateCompare(events: List<T?>, function: CompareFunction<T>): List<T?>? {
         //create the result variable
@@ -69,7 +72,7 @@ class EventStreamSimulator<T : Any> {
 
     /**
      * Simulate Events list throughout [EventStream] passing
-     * a CEP operator function that needs a Grouping function
+     * an operator function that needs a Grouping function
      */
     fun <R : Any?> simulate(
         events: List<T?>?,
@@ -80,25 +83,6 @@ class EventStreamSimulator<T : Any> {
 
         // Apply given Function to stream, and subscribe to result
         function(primaryEventManager.asStream())?.subscribe { result = it!! }
-
-        // add all events to stream
-        eventsFromEntries(events, primaryEventManager)
-        return result
-    }
-
-    /**
-     * Simulate Events list throughout [EventStream] passing
-     * an operator function that transforms stream filtering
-     */
-    fun <K : Any> simulateTransform(
-        events: List<T?>?,
-        function: SingleStreamTransformFunction<T, K>
-    ): List<K?>? {
-        //create the result variable
-        val result = arrayListOf<K?>()
-
-        // Apply given Function to stream, and subscribe to result
-        function(primaryEventManager.asStream())?.subscribe { result.add(it!!) }
 
         // add all events to stream
         eventsFromEntries(events, primaryEventManager)
