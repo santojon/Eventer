@@ -3,8 +3,10 @@ package com.santojon.eventer.test
 import com.santojon.eventer.core.event.Event
 import com.santojon.eventer.core.event.ListEvent
 import com.santojon.eventer.core.stream.EventStream
+import com.santojon.eventer.event.ExtendedListEvent
 import com.santojon.eventer.event.IntEvent
 import com.santojon.eventer.event.StringEvent
+import com.santojon.eventer.event.extendedListEventOf
 import junit.framework.TestCase
 import org.junit.Test
 
@@ -87,16 +89,20 @@ class ClassFilteringTest : TestCase() {
             StringEvent("5"),
             StringEvent("12"),
             IntEvent(12),
-            ListEvent(
-                listOf(StringEvent("L1"), StringEvent("L2")),
-                StringEvent::class
+            extendedListEventOf(
+                listOf(
+                    StringEvent("L1"),
+                    StringEvent("L2")
+                )
             )
         )
 
         val expected = listOf(
-            ListEvent(
-                listOf(StringEvent("L1"), StringEvent("L2")),
-                StringEvent::class
+            extendedListEventOf(
+                listOf(
+                    StringEvent("L1"),
+                    StringEvent("L2")
+                )
             )
         )
 
@@ -115,11 +121,11 @@ class ClassFilteringTest : TestCase() {
             StringEvent("5"),
             StringEvent("12"),
             IntEvent(12),
-            ListEvent(StringEvent::class)
+            extendedListEventOf<StringEvent>()
         )
 
         // Ensure list of received events is empty (the list isn't received)
-        val expected = listOf<ListEvent<StringEvent>?>()
+        val expected = listOf<ExtendedListEvent<StringEvent>?>()
 
         assert(expected == simulator.simulate(events, ::isIterableAsStringEventList))
     }
@@ -136,10 +142,10 @@ class ClassFilteringTest : TestCase() {
             StringEvent("5"),
             StringEvent("12"),
             IntEvent(12),
-            ListEvent(StringEvent::class)
+            extendedListEventOf<StringEvent>()
         )
 
-        val expected = listOf(ListEvent(StringEvent::class))
+        val expected = listOf(extendedListEventOf<StringEvent>())
 
         assert(expected == simulator.simulate(events, ::isListEventOfStringEventList))
     }
@@ -155,13 +161,13 @@ class ClassFilteringTest : TestCase() {
             StringEvent("5"),
             StringEvent("12"),
             IntEvent(12),
-            ListEvent(StringEvent::class)
+            extendedListEventOf<StringEvent>()
         )
 
         val expected = listOf(
             IntEvent(10),
             IntEvent(12),
-            ListEvent(StringEvent::class)
+            extendedListEventOf<StringEvent>()
         )
 
         assert(expected == simulator.simulate(events, ::isAnyOf))
@@ -218,7 +224,7 @@ class ClassFilteringTest : TestCase() {
      * Filter the stream for given classes
      */
     private fun isAnyOf(stream: EventStream<Event>?): EventStream<Event>? =
-        stream?.isAnyOf(IntEvent::class, ListEvent::class)
+        stream?.isAnyOf(IntEvent::class, ExtendedListEvent::class)
 
     /*****************************************************
      *
