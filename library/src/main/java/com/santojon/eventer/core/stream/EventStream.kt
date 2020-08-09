@@ -9,10 +9,10 @@ import io.reactivex.rxkotlin.withLatestFrom
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
-class EventStream<T : Any>(
-    val observable: Observable<T>?,
-    val subscribeOn: Scheduler? = null,
-    val observeOn: Scheduler? = null
+open class EventStream<T : Any>(
+    open val observable: Observable<T>?,
+    open val subscribeOn: Scheduler? = null,
+    open val observeOn: Scheduler? = null
 ) {
     constructor(observable: Observable<T>?, subscribeOn: Int?, observeOn: Int?) : this(
         observable,
