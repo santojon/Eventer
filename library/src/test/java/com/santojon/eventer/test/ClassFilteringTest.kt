@@ -5,22 +5,30 @@ import com.santojon.eventer.core.event.ListEvent
 import com.santojon.eventer.core.stream.EventStream
 import com.santojon.eventer.event.IntEvent
 import com.santojon.eventer.event.StringEvent
+import junit.framework.TestCase
 import org.junit.Test
 
 /**
  * Tests of Class filtering functions
  */
-class ClassFilteringTest {
+class ClassFilteringTest : TestCase() {
     /*****************************************************
      *
-     * Helpers and Utils
+     * Initialization
      *
      *****************************************************/
 
     /**
      * Simulator instance
      */
-    private val simulator = EventStreamSimulator<Event>()
+    private lateinit var simulator: EventStreamSimulator<Event>
+
+    /**
+     * Runs before each test runs
+     */
+    override fun setUp() {
+        simulator = EventStreamSimulator()
+    }
 
     /*****************************************************
      *
@@ -32,9 +40,7 @@ class ClassFilteringTest {
      * Verify return distinct [StringEvent] class from source
      */
     @Test
-    fun isAsTest() {
-        simulator.clear()
-
+    fun testIsAs() {
         val events = listOf<Event?>(
             StringEvent("10"),
             IntEvent(10),
@@ -56,9 +62,7 @@ class ClassFilteringTest {
      * Verify return distinct [IntEvent] class from source with comparator
      */
     @Test
-    fun isAsTestWithComparator() {
-        simulator.clear()
-
+    fun testIsAsWithComparator() {
         val events = listOf<Event?>(
             StringEvent("10"),
             IntEvent(10),
@@ -76,9 +80,7 @@ class ClassFilteringTest {
      * Verify return distinct [ListEvent]s of [StringEvent] class from source
      */
     @Test
-    fun isIterableAsTest() {
-        simulator.clear()
-
+    fun testIsIterableAs() {
         val events = listOf<Event?>(
             StringEvent("10"),
             IntEvent(10),
@@ -106,9 +108,7 @@ class ClassFilteringTest {
      * ensure failing when sending empty list
      */
     @Test
-    fun isIterableAsEmptyListTest() {
-        simulator.clear()
-
+    fun testIsIterableAsEmptyList() {
         val events = listOf<Event?>(
             StringEvent("10"),
             IntEvent(10),
@@ -129,9 +129,7 @@ class ClassFilteringTest {
      * using function that validates empty lists element items type
      */
     @Test
-    fun isListEventOfTest() {
-        simulator.clear()
-
+    fun testIsListEventOf() {
         val events = listOf<Event?>(
             StringEvent("10"),
             IntEvent(10),
@@ -150,9 +148,7 @@ class ClassFilteringTest {
      * Verify return distinct [Event]s of given classes from source
      */
     @Test
-    fun isAnyOfTest() {
-        simulator.clear()
-
+    fun testIsAnyOf() {
         val events = listOf<Event?>(
             StringEvent("10"),
             IntEvent(10),
@@ -175,9 +171,7 @@ class ClassFilteringTest {
      * Verify not returning distinct [Event]s of given classes from source
      */
     @Test
-    fun isNotAnyOfTest() {
-        simulator.clear()
-
+    fun testIsNotAnyOf() {
         val events = listOf<Event?>(
             StringEvent("10"),
             StringEvent("5"),
@@ -225,4 +219,17 @@ class ClassFilteringTest {
      */
     private fun isAnyOf(stream: EventStream<Event>?): EventStream<Event>? =
         stream?.isAnyOf(IntEvent::class, ListEvent::class)
+
+    /*****************************************************
+     *
+     * Cleanup functions
+     *
+     *****************************************************/
+
+    /**
+     * Runs after each test runs
+     */
+    override fun tearDown() {
+        simulator.clear()
+    }
 }

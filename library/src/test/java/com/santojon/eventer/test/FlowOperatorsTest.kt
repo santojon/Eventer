@@ -2,22 +2,30 @@ package com.santojon.eventer.test
 
 import com.santojon.eventer.core.stream.EventStream
 import com.santojon.eventer.event.IntEvent
+import junit.framework.TestCase
 import org.junit.Test
 
 /**
  * Tests of CEP operators related to Flow Management
  */
-class FlowOperatorsTest {
+class FlowOperatorsTest : TestCase() {
     /*****************************************************
      *
-     * Helpers and Utils
+     * Initialization
      *
      *****************************************************/
 
     /**
      * Simulator instance
      */
-    private val simulator = EventStreamSimulator<IntEvent>()
+    private lateinit var simulator: EventStreamSimulator<IntEvent>
+
+    /**
+     * Runs before each test runs
+     */
+    override fun setUp() {
+        simulator = EventStreamSimulator()
+    }
 
     /*****************************************************
      *
@@ -29,9 +37,7 @@ class FlowOperatorsTest {
      * Verify return distinct Events from source
      */
     @Test
-    fun distinctEvents() {
-        simulator.clear()
-
+    fun testDistinctEvents() {
         val events = listOf(
             IntEvent(10),
             IntEvent(10),
@@ -53,9 +59,7 @@ class FlowOperatorsTest {
      * Verify two sources to give only Events existent only in first one
      */
     @Test
-    fun exceptEvents() {
-        simulator.clear()
-
+    fun testExceptEvents() {
         val events1 = listOf(
             IntEvent(10),
             IntEvent(10),
@@ -83,9 +87,7 @@ class FlowOperatorsTest {
      * Verify two sources to give Events existent in both with no duplicates
      */
     @Test
-    fun intersectEvents() {
-        simulator.clear()
-
+    fun testIntersectEvents() {
         val events1 = listOf(
             IntEvent(10),
             IntEvent(10),
@@ -113,9 +115,7 @@ class FlowOperatorsTest {
      * Order Events in source by comparison
      */
     @Test
-    fun orderEvents() {
-        simulator.clear()
-
+    fun testOrderEvents() {
         val events = listOf(
             IntEvent(10),
             IntEvent(11),
@@ -139,9 +139,7 @@ class FlowOperatorsTest {
      * Order Events in source by comparison
      */
     @Test
-    fun groupEvents() {
-        simulator.clear()
-
+    fun testGroupEvents() {
         val events = listOf(
             IntEvent(10),
             IntEvent(10),
@@ -213,4 +211,17 @@ class FlowOperatorsTest {
      */
     private fun groupByFunction(stream: EventStream<IntEvent>?): EventStream<Map<Int?, List<IntEvent>>>? =
         stream?.groupBy { event -> event?.value }
+
+    /*****************************************************
+     *
+     * Cleanup functions
+     *
+     *****************************************************/
+
+    /**
+     * Runs after each test runs
+     */
+    override fun tearDown() {
+        simulator.clear()
+    }
 }
