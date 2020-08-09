@@ -7,6 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.withLatestFrom
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KClass
 
 class EventStream<T : Any>(
     val observable: Observable<T>?,
@@ -143,7 +144,7 @@ class EventStream<T : Any>(
     /**
      * Filter Events by vararg Classes
      */
-    fun isAnyOf(vararg args: T): EventStream<T>? {
+    fun isAnyOf(vararg args: KClass<out T>): EventStream<T>? {
         return EventStream(
             filter { event ->
                 args.map { arg ->

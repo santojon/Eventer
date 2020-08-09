@@ -29,7 +29,7 @@ class ClassFilteringTest {
      *****************************************************/
 
     /**
-     * Verify return distinct [StringEvent] classes from source
+     * Verify return distinct [StringEvent] class from source
      */
     @Test
     fun isAsTest() {
@@ -53,7 +53,7 @@ class ClassFilteringTest {
     }
 
     /**
-     * Verify return distinct [IntEvent] classes from source with comparator
+     * Verify return distinct [IntEvent] class from source with comparator
      */
     @Test
     fun isAsTestWithComparator() {
@@ -73,7 +73,7 @@ class ClassFilteringTest {
     }
 
     /**
-     * Verify return distinct [ListEvent] of [StringEvent] classes from source
+     * Verify return distinct [ListEvent]s of [StringEvent] class from source
      */
     @Test
     fun isIterableAsTest() {
@@ -102,7 +102,7 @@ class ClassFilteringTest {
     }
 
     /**
-     * Verify return distinct [ListEvent] of [StringEvent] classes from source
+     * Verify return distinct [ListEvent]s of [StringEvent] class from source
      * ensure failing when sending empty list
      */
     @Test
@@ -119,13 +119,13 @@ class ClassFilteringTest {
         )
 
         // Ensure list of received events is empty (the list isn't received)
-        val expected = listOf<ListEvent<StringEvent>>()
+        val expected = listOf<ListEvent<StringEvent>?>()
 
         assert(expected == simulator.simulate(events, ::isIterableAsStringEventList))
     }
 
     /**
-     * Verify return distinct [ListEvent] of [StringEvent] classes from source
+     * Verify return distinct [ListEvent]s of [StringEvent] class from source
      * using function that validates empty lists element items type
      */
     @Test
@@ -144,6 +144,49 @@ class ClassFilteringTest {
         val expected = listOf(ListEvent(StringEvent::class))
 
         assert(expected == simulator.simulate(events, ::isListEventOfStringEventList))
+    }
+
+    /**
+     * Verify return distinct [Event]s of given classes from source
+     */
+    @Test
+    fun isAnyOfTest() {
+        simulator.clear()
+
+        val events = listOf<Event?>(
+            StringEvent("10"),
+            IntEvent(10),
+            StringEvent("5"),
+            StringEvent("12"),
+            IntEvent(12),
+            ListEvent(StringEvent::class)
+        )
+
+        val expected = listOf(
+            IntEvent(10),
+            IntEvent(12),
+            ListEvent(StringEvent::class)
+        )
+
+        assert(expected == simulator.simulate(events, ::isAnyOf))
+    }
+
+    /**
+     * Verify not returning distinct [Event]s of given classes from source
+     */
+    @Test
+    fun isNotAnyOfTest() {
+        simulator.clear()
+
+        val events = listOf<Event?>(
+            StringEvent("10"),
+            StringEvent("5"),
+            StringEvent("12")
+        )
+
+        val expected = listOf<Event?>()
+
+        assert(expected == simulator.simulate(events, ::isAnyOf))
     }
 
     /*****************************************************
@@ -176,4 +219,10 @@ class ClassFilteringTest {
      */
     private fun isListEventOfStringEventList(stream: EventStream<Event>?): EventStream<ListEvent<StringEvent>>? =
         stream?.isListEventOf()
+
+    /**
+     * Filter the stream for given classes
+     */
+    private fun isAnyOf(stream: EventStream<Event>?): EventStream<Event>? =
+        stream?.isAnyOf(IntEvent::class, ListEvent::class)
 }
