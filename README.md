@@ -2,9 +2,11 @@
 #### Use Rx without using Rx!    
 
 ### What is this?
-A 100% Kotlin Complex Event Processing library for AndroidX.    
-It's made on top of RXJava/RXKotlin/RxAndroid.    
-Your project don't need to use any Rx dependecy to use this library.    
+A library made with ❤️. And Kotlin.    
+A **100% Kotlin** Event Management Library **for AndroidX**.    
+It's made on top of **RX-Java/Kotlin/Android**. 
+
+**Your project don't need to use any Rx dependecy to use this library.**    
 
 ### Specs
 [![Download](https://api.bintray.com/packages/santojon/Eventer/Eventer/images/download.svg)](https://bintray.com/santojon/Eventer/Eventer/_latestVersion)
