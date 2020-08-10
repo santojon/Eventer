@@ -20,6 +20,10 @@ It's made on top of **RX-Java/Kotlin/Android**.
         * [Receiving Events](#receiving-events)
     * [EventStream](#eventstream)
         * [onReceive() and subscribe()](#onreceive-and-subscribe)
+        * [isAs()](#isas)
+        * [isAnyOf()](#isanyof)
+        * [isIterableAs()](#isiterableas)
+        * [isListEventOf()](#islisteventof)
 * [License](#license)
 
 ### Follow me:
@@ -144,7 +148,120 @@ You can specify **onError** and **onComplete** actions to handle exceptional con
 // TODO
 ```
 
-The **onReceive** and **subscribe** functions works the same way, so, the name to use is your choice. There's no difference.    
+The **onReceive** and/or **subscribe** functions works the same way, so, the name to use is your choice. There's no difference.    
+
+### isAs()
+
+Is used to filter the **EventStream** by class and return the matched events.    
+Requires a class parameter. Is useful to deal with events hierarchy.    
+
+```kotlin
+val manager: EventManager<MyBaseEventClass>? = EventManager()
+
+class MyEventClass1(val name: String?) : MyBaseEventClass()
+class MyEventClass2(val id: Int) : MyBaseEventClass()
+
+manager?.events?.isAs<MyEventClass1>()?.onReceive { myEvent1 ->
+   // Here only [MyEventClass1] data will be managed
+   print(myEvent1?.name)
+}
+```
+
+But you can still sending events of all types in **EventManager** event hierarchy:    
+
+```kotlin
+manager?.sendEvents(MyBaseEventClass(), MyEventClass1("name"), MyEventClass2(1))
+```
+
+In addition, you can use an inline comparator function:    
+
+```kotlin
+manager?.events?.isAs<MyEventClass2> { it.id > 0 }?.onReceive { myEvent1 ->
+   // Here only [MyEventClass2] data will be managed for events with id greater than 0
+   print(myEvent1?.id)
+}
+```
+
+### isAnyOf()
+
+Is used to filter the **EventStream** by many classes and return the matched events.    
+You pass the **KClass**es you want to receive as parameters.    
+De disadvantage is the returned stream will not have events automatically casted to the right types.    
+So you will have to check it manually again if needed.    
+
+```kotlin
+val manager: EventManager<MyBaseEventClass>? = EventManager()
+
+class MyEventClass1(val name: String?) : MyBaseEventClass()
+class MyEventClass2(val id: Int) : MyBaseEventClass()
+
+manager?.events?.isAnyOf(MyEventClass1::class, MyEventClass2::class)?.onReceive { myEvent ->
+   // Here only [MyEventClass1 and 2] data will be managed
+   // You can check witch one is received to do something
+   when(myEvent) {
+      is MyEventClass1 -> print(myEvent1?.name)
+      is MyEventClass2 -> print(myEvent1?.id)
+   }
+}
+
+manager?.sendEvents(MyBaseEventClass(), MyEventClass1("name"), MyEventClass2(1))
+```
+
+### isIterableAs()
+
+Is used to filter the **EventStream** by class and return the matched events that are instance of **Iterable**.    
+Requires two class parameters. The iterable class and the class of the elements of iterable.    
+
+```kotlin
+val manager: EventManager<Event>? = EventManager()
+
+class MyIterableClass<K : Any>() : AttayList<K>, Event
+
+manager?.events?.isIterableAs<MyIterableClass<Int>, Int>()?.onReceive { list ->
+   // Here only [MyIterableClass] data will be managed
+   list?.forEach { print(it) }
+}
+```
+
+**Note this will not work for empty lists!**    
+**Empty lists can't have their types checked, so all empty lists of any type will be returned into this function.**    
+
+```kotlin
+manager?.evets?.isIterableAs<MyIterableClass<Int>, Int>()?.onReceive { list ->
+      // Both lists will reach this point!!!
+}
+
+// All lists will be returned :(
+manager?.sendEvents(listOf<Int>(), listOf<String>())
+```
+
+### isListEventOf()
+
+Is used to filter the **EventStream** by class and return the matched events that are instance of **ListEvent**.    
+Requires two class parameters. The listevent class and the class of the elements of listevent.    
+**ListEvent** is a class created extending **ArrayList**, and can have the list elements type checked even if it is empty.    
+So, the empty listevents of different types are distinguished by the function, solving the problem encountered in dealing with iterables.    
+The **ListEvent** can be extended, so everyone can personalize is own usage of that function.    
+
+```kotlin
+val manager: EventManager<Event>? = EventManager()
+
+manager?.events?.isListEventOf<ListEvent<Int>, Int>()?.onReceive { list ->
+   // Here only [ListEvent] data will be managed
+   list?.forEach { print(it) }
+}
+```
+
+Now it will work fine:    
+
+```kotlin
+manager?.evets?.isListEventOf<ListEvent<Int>, Int>()?.onReceive { list ->
+      // Only listEventOf<Int>() will reach this point. Great!
+}
+
+// All lists will be returned :(
+manager?.sendEvents(listEventOf<Int>(), listEventOf<String>())
+```
 
 # About The Author
 
