@@ -37,3 +37,10 @@ open class ListEvent<T : Any>(open val kClass: KClass<T>) : ArrayList<T>(), Even
         elements.forEach { element -> element?.let { add(it) } }
     }
 }
+
+/**
+ * Extension functions to create [ListEvent]
+ */
+inline fun <reified T : Any> listEventOf(): ListEvent<T> = ListEvent(T::class)
+inline fun <reified T : Any> listEventOf(list: List<T>): ListEvent<T> = ListEvent(list, T::class)
+inline fun <reified T : Any> listEventOf(vararg args: T?): ListEvent<T> = ListEvent(T::class, *args)
