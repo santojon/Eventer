@@ -1,5 +1,8 @@
 # 💥Eventer
 #### Use Rx without using Rx!    
+[![Download](https://api.bintray.com/packages/santojon/Eventer/Eventer/images/download.svg)](https://bintray.com/santojon/Eventer/Eventer/_latestVersion)
+[![platform](https://img.shields.io/badge/platform-Android-green.svg)](https://www.android.com)
+[![API](https://img.shields.io/badge/API-15%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=15s)
 
 ### What is this?
 A library made with :heart:. And Kotlin.    
@@ -12,29 +15,6 @@ It's made on top of **RX-Java/Kotlin/Android**.
 * [Download](#download)
 * [Usage](#usage)
     * [Basics](#basics)
-    * [Gravity](#gravity)
-    * [Title](#title)
-    * [Message](#message)
-    * [Background & Overlay](#background-overlay)
-      * [Background](#background)
-      * [Overlay](#overlay)
-    * [Actions](#actions)
-      * [Primary](#primary)
-      * [Positive/Negative](#positivenegative)
-    * [Icon & Progress](#icon-progress)
-      * [Icon](#icon)
-      * [Progress](#progress)
-    * [Animations](#animations)
-      * [Enter/Exit](#enterexit)
-      * [Icon](#icon)
-    * [Event Listeners](#event-listeners)
-      * [Show](#show)
-      * [Dismiss](#dismiss)
-      * [Taps](#taps)
-    * [Miscellaneous](#miscellaneous)
-      * [Swipe-to-dismiss](#swipe-to-dismiss)
-      * [Shadow](#shadow)
-      * [Vibration](#vibration)
 * [License](#license)
 
 ### Spread Some :heart:
@@ -82,7 +62,28 @@ val manager: EventManager<Any>? = EventManager()
 val manager: EventManager<Any>? = EventManager(EventSchedulers.IO, EventSchedulers.MAIN_THREAD)
 ```
 
-### Specs
-[![Download](https://api.bintray.com/packages/santojon/Eventer/Eventer/images/download.svg)](https://bintray.com/santojon/Eventer/Eventer/_latestVersion)
-[![platform](https://img.shields.io/badge/platform-Android-green.svg)](https://www.android.com)
-[![API](https://img.shields.io/badge/API-15%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=15s)
+# License
+
+```
+MIT License
+
+Copyright (c) 2020 Jonathan Santos
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
