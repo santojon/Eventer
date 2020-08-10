@@ -1,4 +1,4 @@
-# 💥Eventer
+# :boom:Eventer
 #### Use Rx without using Rx!    
 [![Download](https://api.bintray.com/packages/santojon/Eventer/Eventer/images/download.svg)](https://bintray.com/santojon/Eventer/Eventer/_latestVersion)
 [![platform](https://img.shields.io/badge/platform-Android-green.svg)](https://www.android.com)
@@ -14,10 +14,15 @@ It's made on top of **RX-Java/Kotlin/Android**.
 # Table of Contents
 * [Download](#download)
 * [Usage](#usage)
-    * [Basics](#basics)
+    * [EventManager](#eventmanager)
+        * [Sending Events](#sending-events)
+        * [Clearing Events](#clearing-events)
+        * [Receiving Events](#receiving-events)
+    * [EventStream](#eventstream)
+        * [onReceive() and subscribe()](#onreceive-and-subscribe)
 * [License](#license)
 
-### Spread Some :heart:
+### Follow me:
 [![GitHub followers](https://img.shields.io/github/followers/santojon.svg?style=social&label=Follow)](https://github.com/santojon)  [![Twitter Follow](https://img.shields.io/twitter/follow/santojon.svg?style=social)](https://twitter.com/santojon) 
 
 # Download
@@ -48,19 +53,104 @@ allprojects {
 
 # Usage
 
-## Basics
+## EventManager
 
 To Use Event management you need to Create an **EventManager**:    
 
 ```kotlin
-val manager: EventManager<Any>? = EventManager()
+val manager: EventManager<MyBaseEventClass>? = EventManager()
 ```
 
- You can specify the Schedulers for sending and subscribing to events:    
+You can specify the Schedulers for sending and subscribing to events:    
 
 ```kotlin
-val manager: EventManager<Any>? = EventManager(EventSchedulers.IO, EventSchedulers.MAIN_THREAD)
+val manager: EventManager<MyBaseEventClass>? = EventManager(EventSchedulers.IO, EventSchedulers.MAIN_THREAD)
 ```
+
+### Sending Events
+
+**EventManager** have many functions to send events:    
+
+```kotlin
+val event = MyBaseEventClass()
+
+manager?.addEvent(event)
+manager?.publish(event)
+manager?.sendEvent(event)
+```
+
+All of then works the same way, so you can use the name you're confortable with.    
+You can send mode than one event at a time:    
+
+```kotlin
+val event1 = MyBaseEventClass()
+val event2 = MyBaseEventClass()
+
+manager?.addEvents(event1, event2)
+manager?.publishMany(event1, event2)
+manager?.sendEvents(event1, event2)
+```
+
+### Clearing Events
+
+**EventManager** can be cleared to remove all events (if **REALLY** needed):    
+**It's possible, but not recomendable. You will loose all events in it, and break your app flow if some past event or condition is necessary, so, do it carefully.**    
+
+```kotlin
+manager?.clear()  // Bye bye all of my beloved events
+```
+
+### Receiving Events
+
+The events are received through an **EventStream**. The manager can return its stream of events to be used for receiving:    
+
+```kotlin
+manager?.asStream()  // Here is the stream of [MyBaseEventClass] events
+```
+
+You can use manager properties that binds the stream:    
+
+```kotlin
+manager?.stream  // Here is the stream of [MyBaseEventClass] events
+manager?.events  // Here is the stream of [MyBaseEventClass] events
+```
+
+To effectively receive events from **EventStream**, you will need to use its functions. Let's see how next.
+
+## EventStream
+
+### onReceive() and subscribe()
+
+Is the stream of events you can manipulate to specify your conditions.    
+After get stream from manager, your can finally **receive your events**!
+
+```kotlin
+manager?.events?.onReceive { myBaseEvent ->
+   // Do something with your event data
+}
+```
+
+or:    
+
+```kotlin
+manager?.events?.subscribe { myBaseEvent ->
+   // Do something with your event data
+}
+```
+
+You can specify **onError** and **onComplete** actions to handle exceptional conditions:    
+
+```kotlin
+// TODO
+```
+
+The **onReceive** and **subscribe** functions works the same way, so, the name to use is your choice. There's no difference.    
+
+# About The Author
+
+### Jonathan Santos
+
+Design Patterns Affectionate. Full-stack Developer. Team Leadership Studier. Android Geek.    
 
 # License
 
