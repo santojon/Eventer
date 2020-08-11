@@ -6,7 +6,7 @@
 
 ### What is this?
 A library made with :heart:. And Kotlin.    
-A **100% Kotlin** Event Management Library **for AndroidX**.    
+An **100% Kotlin** Event Management Library **for AndroidX**.    
 It's made on top of **RX-Java/Kotlin/Android**. 
 
 **Your project don't need to use any Rx dependecy to use this library.**    
