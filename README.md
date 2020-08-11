@@ -268,6 +268,16 @@ manager?.sendEvents(listEventOf<Int>(), listEventOf<String>())
 
 Design Patterns Affectionate. Full-stack Developer. Team Leadership Studier. Android Geek.    
 
+### Connect with me:
+
+[<img align="left" alt="santojon.com" width="22px" src="https://raw.githubusercontent.com/iconic/open-iconic/master/svg/globe.svg" />][website]
+[<img align="left" alt="santojon | Twitter" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/twitter.svg" />][twitter]
+[<img align="left" alt="santojon | LinkedIn" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" />][linkedin]
+[<img align="left" alt="santojon | Instagram" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/instagram.svg" />][instagram]
+[<img align="left" alt="santojon | Facebook" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/facebook.svg" />][facebook]
+
+<br />
+
 # License
 
 ```
@@ -293,3 +303,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+[website]: https://santojon.com
+[twitter]: https://twitter.com/santojon
+[facebook]: https://fb.com/santojon
+[instagram]: https://instagram.com/santojon
+[linkedin]: https://linkedin.com/in/santojon
