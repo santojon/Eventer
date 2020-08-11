@@ -199,8 +199,8 @@ manager?.events?.isAnyOf(MyEventClass1::class, MyEventClass2::class)?.onReceive 
    // Here only [MyEventClass1 and 2] data will be managed
    // You can check witch one is received to do something
    when(myEvent) {
-      is MyEventClass1 -> print(myEvent1?.name)
-      is MyEventClass2 -> print(myEvent1?.id)
+      is MyEventClass1 -> print(myEvent?.name)
+      is MyEventClass2 -> print(myEvent?.id)
    }
 }
 
@@ -252,7 +252,7 @@ manager?.events?.isListEventOf<ListEvent<Int>, Int>()?.onReceive { list ->
 }
 ```
 
-Now it will work fine:    
+With that function this will work fine:    
 
 ```kotlin
 manager?.evets?.isListEventOf<ListEvent<Int>, Int>()?.onReceive { list ->
