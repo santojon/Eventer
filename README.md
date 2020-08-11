@@ -259,7 +259,6 @@ manager?.evets?.isListEventOf<ListEvent<Int>, Int>()?.onReceive { list ->
       // Only listEventOf<Int>() will reach this point. Great!
 }
 
-// All lists will be returned :(
 manager?.sendEvents(listEventOf<Int>(), listEventOf<String>())
 ```
 
