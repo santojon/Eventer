@@ -1,7 +1,7 @@
 package com.santojon.eventer.core.event
 
 import com.santojon.eventer.core.stream.EventStream
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.TimeUnit
 
 open class ComplexEvent(

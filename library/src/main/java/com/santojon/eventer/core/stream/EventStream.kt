@@ -3,9 +3,9 @@ package com.santojon.eventer.core.stream
 import com.santojon.eventer.core.event.ComplexEvent
 import com.santojon.eventer.core.event.ListEvent
 import com.santojon.eventer.core.scheduler.EventSchedulers
-import io.reactivex.Observable
-import io.reactivex.Scheduler
-import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.kotlin.withLatestFrom
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -247,11 +247,7 @@ class EventStream<T : Any>(
      */
     fun not(stream: EventStream<T>?): EventStream<T>? {
         val streamAccumulated: EventStream<MutableList<T>>? =
-            EventStream(
-                stream?.accumulator()?.observable?.startWith(
-                    ArrayList<T>()
-                )
-            )
+            EventStream(stream?.accumulator()?.observable?.startWithArray(arrayListOf()))
 
         val filtered = observable?.withLatestFrom(streamAccumulated?.observable!!)
             ?.filter { (event, accumulated) ->
@@ -269,11 +265,7 @@ class EventStream<T : Any>(
      */
     fun intersect(stream: EventStream<T>?): EventStream<T>? {
         val streamAccumulated: EventStream<MutableList<T>>? =
-            EventStream(
-                stream?.accumulator()?.observable?.startWith(
-                    arrayListOf<T>()
-                )
-            )
+            EventStream(stream?.accumulator()?.observable?.startWithArray(arrayListOf()))
 
         val filtered = observable?.withLatestFrom(streamAccumulated?.observable!!)
             ?.filter { (event, accumulated) ->

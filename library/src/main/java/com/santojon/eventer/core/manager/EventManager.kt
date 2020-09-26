@@ -2,8 +2,8 @@ package com.santojon.eventer.core.manager
 
 import com.santojon.eventer.core.scheduler.EventSchedulers
 import com.santojon.eventer.core.stream.EventStream
-import io.reactivex.Scheduler
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 /**
  * Used to manage events using [EventStream]
