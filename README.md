@@ -84,7 +84,7 @@ manager?.sendEvent(event)
 ```
 
 All of then works the same way, so you can use the name you're confortable with.    
-You can send mode than one event at a time:    
+You can send more than one event at a time:    
 
 ```kotlin
 val event1 = MyBaseEventClass()
@@ -125,7 +125,7 @@ To effectively receive events from **EventStream**, you will need to use its fun
 
 ### onReceive() and subscribe()
 
-Is the stream of events you can manipulate to specify your conditions.    
+In the stream of events you can manipulate to specify your conditions.    
 After get stream from manager, your can finally **receive your events**!
 
 ```kotlin
@@ -142,7 +142,7 @@ manager?.events?.subscribe { myBaseEvent ->
 }
 ```
 
-You can specify **onError** and **onComplete** actions to handle exceptional conditions:    
+You can specify **onError** and/or **onComplete** actions to handle exceptional conditions:    
 
 ```kotlin
 // TODO
