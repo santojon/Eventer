@@ -8,13 +8,14 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 /**
  * Used to manage events using [EventStream]
  */
-class EventManager<T : Any>(
-    private val subscribeOn: Scheduler? = null,
+open class EventManager<T : Any>() {
+    private val subscribeOn: Scheduler? = null
     private val observeOn: Scheduler? = null
-) {
+
     /**¬
-     * Alternative constructor
+     * Alternative constructors
      */
+    constructor(subscribeOn: Scheduler? = null, observeOn: Scheduler? = null) : this()
     constructor(subscribeOn: Int?, observeOn: Int?) : this(
         EventSchedulers.from(subscribeOn),
         EventSchedulers.from(observeOn)
