@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 30
+    buildToolsVersion '30.0.2'
+    ndkVersion '21.3.6528147'
 
     defaultConfig {
         minSdkVersion 15
@@ -19,11 +21,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
     implementation 'androidx.core:core-ktx:1.3.2'
@@ -61,9 +65,6 @@ ext {
     licenseUrl = 'https://raw.githubusercontent.com/santojon/Eventer/master/LICENSE'
     allLicenses = ["MIT"]
 }
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
 
 apply from: '../scripts/install.gradle'
 apply from: '../scripts/bintray.gradle'
